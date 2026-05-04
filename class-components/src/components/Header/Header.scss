@@ -1,0 +1,45 @@
+.header {
+  padding: 15px;
+
+  background-color: #1A1D20;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+
+  &__input {
+    width: 70%;
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+  &__logo-and-title {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+  }
+
+  &__logo {
+    width: 100px;
+
+    filter: invert(100%);
+  }
+
+  &__title {
+    font-size: 28px;
+    color: #FFFFFF;
+  }
+  
+  &__form {
+    width: 50%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+  }
+}
