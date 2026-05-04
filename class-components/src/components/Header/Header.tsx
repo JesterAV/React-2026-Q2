@@ -18,8 +18,10 @@ class Header extends Component<HeaderProps> {
   handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     const query = this.state.searchValue.trim();
+    const lastQuery = localStorageService.get(searchKey);
     localStorageService.set(searchKey, query);
-    this.props.onSearch(query);
+    
+    if (query !== lastQuery) this.props.onSearch(query);
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
