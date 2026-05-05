@@ -15,8 +15,13 @@ class ResultContainer extends Component<ResultContainerProps> {
       <div className='result-container'>
         {characters.length === 0 
           ? <ResultContainerError /> 
-          : characters.map((character) => {
-          return <CharacterCard name={character.name} img={character.img} actor={character.actor} />
+          : characters.map((character, index) => {
+          return <CharacterCard 
+            key={character.id || index} 
+            name={character.name} 
+            img={character.img} 
+            actor={character.actor} 
+          />
         })}
       </div>
     )
