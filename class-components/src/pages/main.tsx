@@ -7,18 +7,29 @@ import { supernaturalApi } from '../services/supernaturalApi';
 import type { Character } from '../types/characters';
 import { localStorageService } from '../services/localStorage';
 import { searchKey } from '../config/localStorage';
+import Loader from '../components/Loader/Loader';
+
+interface MainPageState {
+  characters: Character[],
+  isLoading: boolean
+}
 
 class MainPage extends Component {
-  state: {characters: Character[]} = {
-    characters: []
+  state: MainPageState = {
+    characters: [],
+    isLoading: false
   }
 
   handleSearch = async (query: string): Promise<void> => {
+    this.setState({ isLoading: true });
+
     try {
       const data = await supernaturalApi.searchCharacter(query.trim());
       this.setState({characters: data.data});
-    } catch {
-
+    } catch(error) {
+      console.error(error);
+    } finally {
+      this.setState({ isLoading: false });
     }
   }
 
@@ -27,11 +38,14 @@ class MainPage extends Component {
     if (lastSearch) {
       this.handleSearch(lastSearch);
     } else {
+      this.setState({ isLoading: true });
       try {
         const data = await supernaturalApi.fetchAllCharacters();
         this.setState({characters: data.data});
-      } catch {
-
+      } catch(error) {
+        console.error(error);
+      } finally {
+        this.setState({ isLoading: false });
       }
     }
   }
@@ -40,7 +54,9 @@ class MainPage extends Component {
     return (
       <div className="main">
         <Header onSearch={this.handleSearch} />
-        <ResultContainer characters={this.state.characters} />
+        {
+          this.state.isLoading ? <Loader /> : <ResultContainer characters={this.state.characters} />
+        }
       </div>
     )
   }
