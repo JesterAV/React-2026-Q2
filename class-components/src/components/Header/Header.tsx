@@ -39,7 +39,7 @@ class Header extends Component<HeaderProps> {
           <input className="header__input" value={this.state.searchValue} onChange={this.handleChange} />
           <Button text='Search' type='submit'/>
         </form>
-        <Button text='Test' type='button' />
+        <Button text='Test Error' type='button' />
       </header>
     )
   }
