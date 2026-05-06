@@ -1,0 +1,14 @@
+.error {
+  padding: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+
+  &__title {
+    font-size: 28px;
+    color: #ffffff;
+  }
+}
