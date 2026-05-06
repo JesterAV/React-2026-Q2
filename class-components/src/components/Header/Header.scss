@@ -7,7 +7,11 @@
   justify-content: center;
   align-items: center;
 
-  gap: 20px;
+  gap: var(--header-gap);
+
+  @media (max-width: 390px) {
+    flex-direction: column;
+  }
 
   &__input {
     width: 70%;
@@ -20,17 +24,21 @@
     display: flex;
     align-items: center;
 
-    gap: 20px;
+    gap: var(--logo-and-title-gap-size);
+
+    @media (max-width: 550px) {
+      flex-direction: column;
+    }
   }
 
   &__logo {
-    width: 100px;
+    width: var(--logo-width);
 
     filter: invert(100%);
   }
 
   &__title {
-    font-size: 28px;
+    font-size: var(--title-text-size);
     color: #FFFFFF;
   }
   
@@ -40,6 +48,10 @@
     display: flex;
     align-items: center;
 
-    gap: 20px;
+    gap: var(--header-form-gap-size);
+
+    @media (max-width: 420px) {
+      width: 70%;
+    }
   }
 }

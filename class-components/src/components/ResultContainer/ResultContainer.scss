@@ -3,7 +3,7 @@
 
   background-color: #212529;
 
-  padding: 40px;
+  padding: var(--result-pading-size);
 
   &__error {
     width: 100%;
