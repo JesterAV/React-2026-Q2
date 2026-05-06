@@ -12,7 +12,8 @@ interface HeaderProps {
 
 class Header extends Component<HeaderProps> {
   state = {
-    searchValue: localStorageService.get(searchKey)
+    searchValue: localStorageService.get(searchKey),
+    hasError: false
   }
 
   handleSubmit = (event: React.FormEvent): void => {
@@ -28,7 +29,13 @@ class Header extends Component<HeaderProps> {
     this.setState({ searchValue: event.target.value });
   }
 
+  testError() {
+    this.setState({ hasError: true })
+  }
+
   render() {
+    if (this.state.hasError) throw new Error('Test Error');
+
     return(
       <header className="header">
         <div className='header__logo-and-title'>
@@ -39,7 +46,7 @@ class Header extends Component<HeaderProps> {
           <input className="header__input" value={this.state.searchValue} onChange={this.handleChange} />
           <Button text='Search' type='submit'/>
         </form>
-        <Button text='Test Error' type='button' />
+        <Button text='Test Error' type='button' onClick={() => this.testError()} />
       </header>
     )
   }
