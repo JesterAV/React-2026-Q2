@@ -14,7 +14,7 @@ class CharacterCard extends Component<CharacterCardProps> {
 
     return (
       <div className="character-card">
-        <img className='character-card__img' src={img} />
+        <img className='character-card__img' src={img} alt={name} />
 
         <div className='character-card__separator'></div>
 
