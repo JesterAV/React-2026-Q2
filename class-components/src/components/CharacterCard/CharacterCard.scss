@@ -7,6 +7,8 @@
 
   padding: var(--card-padding-size);
 
+  cursor: pointer;
+
   &__img {
     width: var(--card-img-width);
     border-radius: 10px;

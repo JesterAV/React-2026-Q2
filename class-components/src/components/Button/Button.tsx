@@ -1,23 +1,21 @@
 import './Button.scss';
 
-import { Component } from "react";
-
 interface ButtonProps {
   text: string;
   onClick?: () => void;
   type: 'button' | 'submit';
+  disabled?: boolean
 }
 
-class Button extends Component<ButtonProps> {
-  render() {
-    const {text, type, onClick} = this.props;
+function Button(props: ButtonProps) {
+  const {text, onClick, type, disabled} = props;
 
-    return <button
-      className='button' 
-      onClick={onClick}
-      type={type}
-      >{text}</button>
-  }
+  return <button
+    className='button' 
+    onClick={onClick}
+    type={type}
+    disabled={disabled}
+    >{text}</button>
 }
 
 export default Button;

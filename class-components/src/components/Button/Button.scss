@@ -14,4 +14,12 @@
     background-color: #FFFFFF;
     color: #DC3545;
   }
+
+  &:disabled {
+    opacity: 0.3;
+    &:hover {
+      background-color: #DC3545;
+      color: #FFFFFF;
+    }
+  }
 }
