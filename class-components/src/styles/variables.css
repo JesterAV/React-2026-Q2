@@ -1,0 +1,38 @@
+:root {
+  --card-text-size: 20px;
+  --card-img-width: 200px;
+  --card-gap-size: 20px;
+  --card-padding-size: 5px 10px;
+
+  --result-padding-size: 40px;
+
+  --title-text-size: 28px;
+  --logo-width: 100px;
+
+  --button-padding-size: 12px 20px;
+
+  --logo-and-title-gap-size: 20px;
+
+  --header-gap: 20px;
+
+  --header-form-gap-size: 20px;
+
+  @media (max-width: 840px) {
+    --card-text-size: 16px;
+    --card-img-width: 100px;
+    --card-gap-size: 10px;
+
+    --result-padding-size: 20px;
+
+    --title-text-size: 18px;
+    --logo-width: 60px;
+
+    --button-padding-size: 8px 12px;
+
+    --logo-and-title-gap-size: 5px;
+
+    --header-gap: 7px;
+
+    --header-form-gap-size: 7px;
+  }
+}

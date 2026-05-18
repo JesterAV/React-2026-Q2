@@ -1,0 +1,56 @@
+.detail-card {
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 25px;
+  padding: 20px;
+  
+  position: relative;
+
+  &__title {
+    font-size: 48px;
+  }
+
+  &__text {
+    font-size: 20px;
+  }
+
+  &__image {
+    border-radius: 10px;
+  }
+
+  &__close-button {
+    width: 30px;
+    height: 30px;
+
+    cursor: pointer;
+
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    &_line-one,
+    &_line-two {
+      width: 20px;
+      height: 2px;
+
+      position: absolute;
+      left: 50%;
+      top: 50%;
+
+      background-color: #ffffff;
+    }
+
+    &_line-one {
+      transform: rotate(45deg);
+    }
+
+    &_line-two {
+      transform: rotate(-45deg);
+    }
+  }
+}

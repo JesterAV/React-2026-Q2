@@ -1,0 +1,25 @@
+.button {
+  padding: var(--button-padding-size);
+
+  background-color: #DC3545;
+  color: #FFFFFF;
+  
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition: 0.5s;
+
+  &:hover {
+    background-color: #FFFFFF;
+    color: #DC3545;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    &:hover {
+      background-color: #DC3545;
+      color: #FFFFFF;
+    }
+  }
+}

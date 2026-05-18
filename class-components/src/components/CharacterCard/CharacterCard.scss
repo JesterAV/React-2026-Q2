@@ -1,0 +1,28 @@
+.character-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: var(--card-gap-size);
+
+  padding: var(--card-padding-size);
+
+  cursor: pointer;
+
+  &__img {
+    width: var(--card-img-width);
+    border-radius: 10px;
+  }
+
+  &__text {
+    font-size: var(--card-text-size);
+    color: #ffffff;
+  }
+
+  &__separator {
+    width: 1px;
+    height: 30px;
+
+    background-color: #ffffff;
+  }
+}

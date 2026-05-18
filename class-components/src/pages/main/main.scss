@@ -1,0 +1,34 @@
+.main {
+  max-width: 1200px;
+  width: 100%;
+  height: max-content;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow: 0 0 100px rgba($color: (#000000), $alpha: 1.0);
+
+  &__split-view {
+    width: 100%;
+    display: flex;
+  }
+
+  &__left {
+    width: 100%;
+    transition: 0.3s;
+    &.with-details {
+      width: 50%;
+    }
+  }
+
+  &__right {
+    width: 50%;
+    background-color: #212529;
+
+    border-left: 1px solid #ffffff;
+  }
+}
