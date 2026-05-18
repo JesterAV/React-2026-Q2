@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test, vi, beforeEach } from "vitest";
+import { BrowserRouter } from "react-router";
 import Header from "./Header";
 import logo from '../../assets/supernatural_logo.png';
 import { localStorageService } from "../../services/localStorage";
@@ -17,6 +18,14 @@ vi.mock('../../services/localStorage', () => ({
   }
 }));
 
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useNavigate: () => vi.fn(),
+  };
+});
+
 describe('Header component', () => {
   const mockOnSearch = vi.fn();
 
@@ -26,9 +35,13 @@ describe('Header component', () => {
     mockGet.mockReturnValue('');
   });
 
+  const renderWithRouter = (component: React.ReactNode) => {
+    return render(<BrowserRouter>{component}</BrowserRouter>);
+  };
+
   describe('Correctly render', () => {
     test('Logo and image', () => {
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
 
       expect(screen.getByText('Hunterpedia')).toBeInTheDocument();
 
@@ -39,11 +52,12 @@ describe('Header component', () => {
     });
 
     test('Input and Button', () => {
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
 
       expect(screen.getByRole('textbox')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Test Error' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'About' })).toBeInTheDocument();
     })
   });
 
@@ -53,7 +67,7 @@ describe('Header component', () => {
       const mockGet = vi.mocked(localStorageService.get);
       mockGet.mockReturnValue(savedSearch);
 
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
 
       expect(localStorageService.get).toHaveBeenCalledWith(searchKey);
       expect(screen.getByRole('textbox')).toHaveValue(savedSearch);
@@ -64,7 +78,7 @@ describe('Header component', () => {
     test('updates input on type', async () => {
       const user = userEvent.setup();
 
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
 
       const input = screen.getByRole('textbox');
 
@@ -76,7 +90,7 @@ describe('Header component', () => {
     test('Submit form', async () => {
       const user = userEvent.setup();
 
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
 
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'Search' });
@@ -93,7 +107,7 @@ describe('Header component', () => {
       mockGet.mockReturnValue('Castiel');
       
       const user = userEvent.setup();
-      render(<Header onSearch={mockOnSearch} />);
+      renderWithRouter(<Header onSearch={mockOnSearch} />);
       
       const button = screen.getByRole('button', { name: 'Search' });
       await user.click(button);
@@ -105,7 +119,7 @@ describe('Header component', () => {
     test('error button click', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      render(
+      renderWithRouter(
         <ErrorBoundary>
           <Header onSearch={mockOnSearch} />
         </ErrorBoundary>
