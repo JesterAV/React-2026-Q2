@@ -1,52 +1,50 @@
-import { describe, test, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
-import ResultContainer from "./ResultContainer";
-import type { Character } from "../../types/characters";
+import { render, screen } from '@testing-library/react';
+import { describe, test, expect, vi } from 'vitest';
+import ResultContainer from './ResultContainer';
+import type { Character } from '../../types/characters';
 
-const charactersMock: Character[] = [
-  {
-    id: "5441xkkfwlhdv3rk5",
-    name: "Aaron Bass",
-    img: "https://supernatural-api.onrender.com/images/350px-Aaron_Bass.png",
-    actor: ["Adam Rose"],
-    episodes: [
-      {
-        title: "8.13 Everybody Hates Hitler",
-        id: "5441xkfs0li0res0t"
-      }
-    ],
-    occupation: ["Judah Initiative"]
-  },
-];
+describe('ResultContainer', () => {
+  const mockSetId = vi.fn();
+  
+  const charactersMock: Character[] = [
+    {
+      id: '1',
+      name: 'Dean Winchester',
+      img: 'dean.jpg',
+      actor: ['Jensen Ackles'],
+      occupation: ['Hunter'],
+      episodes: [],
+    },
+    {
+      id: '2',
+      name: 'Sam Winchester',
+      img: 'sam.jpg',
+      actor: ['Jared Padalecki'],
+      occupation: ['Hunter'],
+      episodes: [],
+    },
+  ];
 
-const mockWithoutId = [
-  {
-    name: "Aaron Bass",
-    img: "https://supernatural-api.onrender.com/images/350px-Aaron_Bass.png",
-    actor: ["Adam Rose"],
-    episodes: [
-      {
-        title: "8.13 Everybody Hates Hitler",
-        id: "5441xkfs0li0res0t"
-      }
-    ],
-    occupation: ["Judah Initiative"]
-  } as Character,
-]
-
-describe('ResultContainer component', () => {
-  test('renders characters with id', () => {
-    render(<ResultContainer characters={charactersMock} />);
-    expect(screen.getByText('Aaron Bass')).toBeInTheDocument();
+  test('renders list of characters', () => {
+    render(<ResultContainer characters={charactersMock} setId={mockSetId} />);
+    
+    expect(screen.getByText('Dean Winchester')).toBeInTheDocument();
+    expect(screen.getByText('Sam Winchester')).toBeInTheDocument();
   });
 
-  test('renders characters without id (uses index as key)', () => {
-    render(<ResultContainer characters={mockWithoutId} />);
-    expect(screen.getByText('Aaron Bass')).toBeInTheDocument();
+  test('renders empty state when no characters', () => {
+    render(<ResultContainer characters={[]} setId={mockSetId} />);
+    
+    expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
   });
 
-  test('renders error when empty', () => {
-    render(<ResultContainer characters={[]} />);
-    expect(screen.getByText('No characters found, please try another request.')).toBeInTheDocument();
+  test('renders correctly with character without id', () => {
+    const mockWithoutId = [
+      { ...charactersMock[0], id: '' },
+    ] as Character[];
+    
+    render(<ResultContainer characters={mockWithoutId} setId={mockSetId} />);
+    
+    expect(screen.getByText('Dean Winchester')).toBeInTheDocument();
   });
 });
