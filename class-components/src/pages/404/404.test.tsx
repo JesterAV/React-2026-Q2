@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import NotFoundPage from './404';
 import logo from '../../assets/supernatural_logo.png';
 
-// Мокаем useNavigate
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {

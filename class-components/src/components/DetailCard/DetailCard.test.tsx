@@ -18,7 +18,6 @@ vi.mock('../Loader/Loader', () => ({
 describe('DetailCard component', () => {
   const mockHandleSetCard = vi.fn();
   
-  // Исправленный mockCharacter под тип Character
   const mockCharacter: Character = {
     id: '1',
     name: 'Dean Winchester',
