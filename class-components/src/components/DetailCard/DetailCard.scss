@@ -1,5 +1,5 @@
 .detail-card {
-  color: #ffffff;
+  color: var(--primary-text-color);
 
   display: flex;
   flex-direction: column;
@@ -42,7 +42,7 @@
       left: 50%;
       top: 50%;
 
-      background-color: #ffffff;
+      background-color: var(--mark-button-bg-color);
     }
 
     &_line-one {

@@ -16,13 +16,13 @@
 
   &__text {
     font-size: var(--card-text-size);
-    color: #ffffff;
+    color: var(--primary-text-color);
   }
 
   &__separator {
     width: 1px;
     height: 30px;
 
-    background-color: #ffffff;
+    background-color: var(--separator-bg-color);
   }
 }

@@ -4,7 +4,7 @@
   align-items: center;
   height: 100vh;
 
-  background-color: #212529;
+  background-color: var(--main-bg-color);
 
   &__loader {
     width: 40px;

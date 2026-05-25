@@ -7,10 +7,10 @@
 
   padding: 20px 0 20px 0;
 
-  background-color: #212529;
+  background-color: var(--main-bg-color);
 
   &__current-page {
-    color: #ffffff;
+    color: var(--primary-text-color);
     font-size: 20px;
   }
 }

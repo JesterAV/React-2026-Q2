@@ -1,7 +1,7 @@
 .header {
   padding: 15px;
 
-  background-color: #1A1D20;
+  background-color: var(--header-bg-color);
 
   display: flex;
   justify-content: center;
@@ -34,12 +34,12 @@
   &__logo {
     width: var(--logo-width);
 
-    filter: invert(100%);
+    filter: var(--logo-filter);
   }
 
   &__title {
     font-size: var(--title-text-size);
-    color: #FFFFFF;
+    color: var(--primary-text-color);
   }
   
   &__form {
