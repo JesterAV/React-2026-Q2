@@ -7,6 +7,7 @@ import { searchKey } from '../../config/localStorage';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { appRoutes } from '../../router/routes';
+import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -45,6 +46,7 @@ function Header({ onSearch }: HeaderProps) {
       </form>
       <Button text='Test Error' type='button' onClick={() => setHasError(true)} />
       <Button text='About' type='button' onClick={() => navigate(appRoutes.about)} />
+      <ThemeSwitcher />
     </header>
   )
 }
