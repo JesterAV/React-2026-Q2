@@ -1,4 +1,5 @@
 import { apiConfig } from "../config/api"
+import type { Character } from "../types/characters";
 
 export const supernaturalApi = {
   fetchAllCharacters: async (page: number = 1) => {
@@ -17,7 +18,7 @@ export const supernaturalApi = {
     return response.json();
   },
 
-  getCharacterById: async (id: string) => {
+  getCharacterById: async (id: string): Promise<Character> => {
     const response = await fetch(`${apiConfig.baseUrl}${apiConfig.endpoints.characters}/${id}`);
     
     return response.json();
