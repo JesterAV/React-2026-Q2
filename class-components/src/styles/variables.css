@@ -35,4 +35,30 @@
 
     --header-form-gap-size: 7px;
   }
+
+  --root-bg-color: #db929a;
+  --header-bg-color: #c2adaf;
+  --main-bg-color: #e4cdcf;
+  --button-bg-color: #DC3545;
+  --button-hover-bg-color: #212529;
+  --button-text-color: #1A1D20;
+  --button-hover-text-color: #FFFFFF;
+  --primary-text-color: #1A1D20;
+  --separator-bg-color: #1A1D20;
+  --logo-filter: invert(0);
+  --mark-button-bg-color: #1A1D20;
+}
+
+.dark-theme {
+  --root-bg-color: #2C0B0E;
+  --header-bg-color: #1A1D20;
+  --main-bg-color: #212529;
+  --button-bg-color: #DC3545;
+  --button-hover-bg-color: #FFFFFF;
+  --button-text-color: #FFFFFF;
+  --button-hover-text-color: #FFFFFF;
+  --primary-text-color: #FFFFFF;
+  --separator-bg-color: #FFFFFF;
+  --mark-button-bg-color: #FFFFFF;
+  --logo-filter: invert(100%);
 }
