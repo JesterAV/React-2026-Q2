@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, test, expect, vi } from 'vitest';
 import ResultContainer from './ResultContainer';
 import type { Character } from '../../types/characters';
+import { renderWithProviders } from '../../tests/test-utils';
 
 describe('ResultContainer', () => {
   const mockSetId = vi.fn();
@@ -26,14 +27,14 @@ describe('ResultContainer', () => {
   ];
 
   test('renders list of characters', () => {
-    render(<ResultContainer characters={charactersMock} setId={mockSetId} />);
+    renderWithProviders(<ResultContainer characters={charactersMock} setId={mockSetId} />);
     
     expect(screen.getByText('Dean Winchester')).toBeInTheDocument();
     expect(screen.getByText('Sam Winchester')).toBeInTheDocument();
   });
 
   test('renders empty state when no characters', () => {
-    render(<ResultContainer characters={[]} setId={mockSetId} />);
+    renderWithProviders(<ResultContainer characters={[]} setId={mockSetId} />);
     
     expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
   });
@@ -43,7 +44,7 @@ describe('ResultContainer', () => {
       { ...charactersMock[0], id: '' },
     ] as Character[];
     
-    render(<ResultContainer characters={mockWithoutId} setId={mockSetId} />);
+    renderWithProviders(<ResultContainer characters={mockWithoutId} setId={mockSetId} />);
     
     expect(screen.getByText('Dean Winchester')).toBeInTheDocument();
   });
