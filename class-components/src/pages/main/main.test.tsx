@@ -1,15 +1,16 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import { BrowserRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import MainPage from './main';
 import { supernaturalApi } from '../../services/supernaturalApi';
 import { localStorageService } from '../../services/localStorage';
+import { renderWithProviders } from '../../tests/test-utils';
 
 vi.mock('../../services/supernaturalApi', () => ({
   supernaturalApi: {
     fetchAllCharacters: vi.fn(),
     searchCharacter: vi.fn(),
+    getCharacterById: vi.fn(),
   },
 }));
 
@@ -44,7 +45,7 @@ vi.mock('../../components/PaginationControllers/PaginationControllers', () => ({
       <button onClick={() => onChangePage(2)} data-testid="next-button">
         Next
       </button>
-      <button onClick={() => onChangePage(0)} data-testid="prev-button">
+      <button onClick={() => onChangePage(1)} data-testid="prev-button">
         Prev
       </button>
       <span data-testid="has-next">{String(hasNext)}</span>
@@ -72,10 +73,6 @@ vi.mock('../../hooks/useCharacterDetail', () => ({
 }));
 
 describe('MainPage component', () => {
-  const renderWithRouter = (component: React.ReactNode) => {
-    return render(<BrowserRouter>{component}</BrowserRouter>);
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(supernaturalApi.fetchAllCharacters).mockResolvedValue({
@@ -91,25 +88,25 @@ describe('MainPage component', () => {
     test('Shows loader when loading', () => {
       vi.mocked(supernaturalApi.fetchAllCharacters).mockImplementation(() => new Promise(() => {}));
       
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
 
       expect(screen.getByTestId('loader')).toBeInTheDocument();
     });
 
     test('Shows header component', () => {
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
 
       expect(screen.getByTestId('header')).toBeInTheDocument();
     });
 
     test('Shows result container after loading', async () => {
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
 
       expect(await screen.findByTestId('result-container')).toBeInTheDocument();
     });
 
     test('Shows pagination after loading', async () => {
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
 
       expect(await screen.findByTestId('pagination')).toBeInTheDocument();
     });
@@ -118,7 +115,7 @@ describe('MainPage component', () => {
   describe('Pagination', () => {
     test('Changes page when clicking next', async () => {
       const user = userEvent.setup();
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       await screen.findByTestId('pagination');
       
@@ -130,14 +127,14 @@ describe('MainPage component', () => {
 
     test('Changes page when clicking prev', async () => {
       const user = userEvent.setup();
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       await screen.findByTestId('pagination');
       
       const prevButton = screen.getByTestId('prev-button');
       await user.click(prevButton);
       
-      expect(supernaturalApi.fetchAllCharacters).toHaveBeenCalledWith(0);
+      expect(supernaturalApi.fetchAllCharacters).toHaveBeenCalledWith(1);
     });
   });
 
@@ -151,7 +148,7 @@ describe('MainPage component', () => {
       };
       vi.mocked(supernaturalApi.searchCharacter).mockResolvedValue(mockSearchResults);
       
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       const searchButton = screen.getByRole('button', { name: 'Search' });
       await user.click(searchButton);
@@ -165,7 +162,7 @@ describe('MainPage component', () => {
   describe('Character details', () => {
     test('Opens detail card when character is selected', async () => {
       const user = userEvent.setup();
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       await screen.findByTestId('result-container');
       
@@ -177,7 +174,7 @@ describe('MainPage component', () => {
 
     test('Closes detail card when close button is clicked', async () => {
       const user = userEvent.setup();
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       await screen.findByTestId('result-container');
       
@@ -200,7 +197,7 @@ describe('MainPage component', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       vi.mocked(supernaturalApi.fetchAllCharacters).mockRejectedValue(new Error('API Error'));
       
-      renderWithRouter(<MainPage />);
+      renderWithProviders(<MainPage />);
       
       await waitFor(() => {
         expect(consoleSpy).toHaveBeenCalled();
