@@ -27,8 +27,8 @@
 
   &__right {
     width: 50%;
-    background-color: #212529;
+    background-color: var(--main-bg-color);
 
-    border-left: 1px solid #ffffff;
+    border-left: 1px solid var(--primary-text-color);
   }
 }
