@@ -9,16 +9,6 @@ const selectCardsSlice = createSlice({
   name: 'selectCards',
   initialState,
   reducers: {
-    selectCard: (state, action) => {
-      const id = action.payload;
-      if (!state.selectCards.includes(id)) state.selectCards.push(id);
-    },
-
-    deselectCard: (state, action) => {
-      const id = action.payload;
-      state.selectCards = state.selectCards.filter(selectedCard => selectedCard !== id);
-    },
-
     toggleSelectCard: (state, action) => {
       const id = action.payload;
       const exists = state.selectCards.includes(id);
@@ -35,6 +25,6 @@ const selectCardsSlice = createSlice({
   }
 })
 
-export const { selectCard, deselectCard, toggleSelectCard, clearSelected } = selectCardsSlice.actions;
+export const { toggleSelectCard, clearSelected } = selectCardsSlice.actions;
 
 export default selectCardsSlice.reducer;
