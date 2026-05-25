@@ -1,0 +1,16 @@
+.pagination-controllers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 20px 0 20px 0;
+
+  background-color: var(--main-bg-color);
+
+  &__current-page {
+    color: var(--primary-text-color);
+    font-size: 20px;
+  }
+}
