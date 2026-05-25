@@ -11,6 +11,7 @@ import PaginationControllers from '../../components/PaginationControllers/Pagina
 import { useSearchParams } from 'react-router';
 import DetailCard from '../../components/DetailCard/DetailCard';
 import { useCharacterDetail } from '../../hooks/useCharacterDetail';
+import SelectedItems from '../../components/SelectedItems/SelectedItems';
 
 function MainPage() {
   const [characters, setCharacters] = useState([]);
@@ -99,6 +100,7 @@ function MainPage() {
   return (
     <div className="main">
       <Header onSearch={handleSearch} />
+      <SelectedItems />
       {isLoading ? (
         <Loader />
       ) : (
