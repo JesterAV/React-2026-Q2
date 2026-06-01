@@ -1,19 +1,36 @@
 import { render, screen } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import DetailCard from './DetailCard';
-import { supernaturalApi } from '../../services/supernaturalApi';
+import { supernaturalApi } from '../../store/api/supernaturalApi';
 import type { Character } from '../../types/characters';
 
-vi.mock('../../services/supernaturalApi', () => ({
+vi.mock('../../store/api/supernaturalApi', () => ({
+  useGetCharacterByIdQuery: vi.fn(),
   supernaturalApi: {
-    getCharacterById: vi.fn(),
+    reducerPath: 'supernaturalApi',
+    reducer: (state = {}) => state,
+    middleware: () => (next: any) => (action: any) => next(action),
   },
 }));
+
+import { useGetCharacterByIdQuery } from '../../store/api/supernaturalApi';
 
 vi.mock('../Loader/Loader', () => ({
   default: () => <div data-testid="loader">Loading...</div>,
 }));
+
+const createTestStore = () => {
+  return configureStore({
+    reducer: {
+      [supernaturalApi.reducerPath]: supernaturalApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(supernaturalApi.middleware),
+  });
+};
 
 describe('DetailCard component', () => {
   const mockHandleSetCard = vi.fn();
@@ -32,20 +49,37 @@ describe('DetailCard component', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(supernaturalApi.getCharacterById).mockResolvedValue(mockCharacter);
   });
+
+  const renderWithProvider = (component: React.ReactElement) => {
+    return render(
+      <Provider store={createTestStore()}>
+        {component}
+      </Provider>
+    );
+  };
 
   describe('Correctly render', () => {
     test('Shows loader when loading', () => {
-      vi.mocked(supernaturalApi.getCharacterById).mockImplementation(() => new Promise(() => {}));
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: null,
+        isLoading: true,
+        error: null,
+      });
       
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
+      renderWithProvider(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
 
       expect(screen.getByTestId('loader')).toBeInTheDocument();
     });
 
     test('Shows character details after loading', async () => {
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: mockCharacter,
+        isLoading: false,
+        error: null,
+      });
+      
+      renderWithProvider(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
 
       expect(await screen.findByText('Dean Winchester')).toBeInTheDocument();
       expect(await screen.findByText('Actor: Jensen Ackles')).toBeInTheDocument();
@@ -53,7 +87,13 @@ describe('DetailCard component', () => {
     });
 
     test('Displays character image with correct attributes', async () => {
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: mockCharacter,
+        isLoading: false,
+        error: null,
+      });
+      
+      renderWithProvider(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
 
       const image = await screen.findByRole('img');
       expect(image).toHaveAttribute('src', mockCharacter.img);
@@ -62,30 +102,16 @@ describe('DetailCard component', () => {
   });
 
   describe('API calls', () => {
-    test('Fetches character by id on mount', async () => {
-      render(<DetailCard id="2" handleSetCard={mockHandleSetCard} />);
-
-      expect(supernaturalApi.getCharacterById).toHaveBeenCalledWith('2');
-      await screen.findByText('Dean Winchester');
-    });
-
-    test('Refetches when id changes', async () => {
-      const { rerender } = render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
-
-      await screen.findByText('Dean Winchester');
-      expect(supernaturalApi.getCharacterById).toHaveBeenCalledTimes(1);
-
-      rerender(<DetailCard id="2" handleSetCard={mockHandleSetCard} />);
+    test('Calls query with correct id', async () => {
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: mockCharacter,
+        isLoading: false,
+        error: null,
+      });
       
-      expect(supernaturalApi.getCharacterById).toHaveBeenCalledTimes(2);
-      expect(supernaturalApi.getCharacterById).toHaveBeenCalledWith('2');
-    });
+      renderWithProvider(<DetailCard id="2" handleSetCard={mockHandleSetCard} />);
 
-    test('Calls handleSetCard with id after successful fetch', async () => {
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
-
-      await screen.findByText('Dean Winchester');
-      expect(mockHandleSetCard).toHaveBeenCalledWith('1');
+      expect(useGetCharacterByIdQuery).toHaveBeenCalledWith('2');
     });
   });
 
@@ -93,12 +119,18 @@ describe('DetailCard component', () => {
     test('Clicking close button calls handleSetCard with null', async () => {
       const user = userEvent.setup();
       
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: mockCharacter,
+        isLoading: false,
+        error: null,
+      });
+      
+      renderWithProvider(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
 
       await screen.findByText('Dean Winchester');
       
       const closeButton = document.querySelector('.detail-card__close-button');
-      await user.click(closeButton!);
+      if (closeButton) await user.click(closeButton);
       
       expect(mockHandleSetCard).toHaveBeenCalledWith(null);
     });
@@ -106,17 +138,15 @@ describe('DetailCard component', () => {
 
   describe('Error handling', () => {
     test('Handles API error gracefully', async () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      vi.mocked(supernaturalApi.getCharacterById).mockRejectedValue(new Error('API Error'));
-
-      render(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
-
-      await new Promise(resolve => setTimeout(resolve, 100));
+      (useGetCharacterByIdQuery as any).mockReturnValue({
+        data: null,
+        isLoading: false,
+        error: new Error('API Error'),
+      });
       
+      renderWithProvider(<DetailCard id="1" handleSetCard={mockHandleSetCard} />);
+
       expect(screen.queryByText('Dean Winchester')).not.toBeInTheDocument();
-      expect(consoleSpy).toHaveBeenCalled();
-      
-      consoleSpy.mockRestore();
     });
   });
 });
