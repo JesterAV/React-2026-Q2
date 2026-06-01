@@ -1,0 +1,57 @@
+.header {
+  padding: 15px;
+
+  background-color: var(--header-bg-color);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: var(--header-gap);
+
+  @media (max-width: 390px) {
+    flex-direction: column;
+  }
+
+  &__input {
+    width: 70%;
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+  &__logo-and-title {
+    display: flex;
+    align-items: center;
+
+    gap: var(--logo-and-title-gap-size);
+
+    @media (max-width: 550px) {
+      flex-direction: column;
+    }
+  }
+
+  &__logo {
+    width: var(--logo-width);
+
+    filter: var(--logo-filter);
+  }
+
+  &__title {
+    font-size: var(--title-text-size);
+    color: var(--primary-text-color);
+  }
+  
+  &__form {
+    width: 50%;
+
+    display: flex;
+    align-items: center;
+
+    gap: var(--header-form-gap-size);
+
+    @media (max-width: 420px) {
+      width: 70%;
+    }
+  }
+}
