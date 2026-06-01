@@ -11,9 +11,10 @@ import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
+  onClearCache: () => void;
 }
 
-function Header({ onSearch }: HeaderProps) {
+function Header({ onSearch, onClearCache }: HeaderProps) {
   const [searchValue, setSearchValue] = useState(localStorageService.get(searchKey));
   const [hasError, setHasError] = useState(false);
 
@@ -46,6 +47,7 @@ function Header({ onSearch }: HeaderProps) {
       </form>
       <Button text='Test Error' type='button' onClick={() => setHasError(true)} />
       <Button text='About' type='button' onClick={() => navigate(appRoutes.about)} />
+      <Button text='Clear cache' type='button' onClick={() => onClearCache()} />
       <ThemeSwitcher />
     </header>
   )
