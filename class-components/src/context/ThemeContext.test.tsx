@@ -69,5 +69,39 @@ describe('ThemeContext', () => {
       expect(screen.getByTestId('theme-value')).toHaveTextContent('dark');
       expect(document.documentElement.classList.contains('dark-theme')).toBe(true);
     });
+
+    test('toggleTheme changes theme from dark to light', async () => {
+      const user = userEvent.setup();
+      
+      let currentTheme = '';
+      let toggleFn = () => {};
+      
+      render(
+        <ThemeProvider>
+          <ThemeContext.Consumer>
+            {(context) => {
+              currentTheme = context?.theme || '';
+              toggleFn = context?.toggleTheme || (() => {});
+              return (
+                <div>
+                  <div data-testid="theme-value">{currentTheme}</div>
+                  <button onClick={toggleFn}>Toggle</button>
+                </div>
+              );
+            }}
+          </ThemeContext.Consumer>
+        </ThemeProvider>
+      );
+      
+      await user.click(screen.getByRole('button', { name: 'Toggle' }));
+      
+      expect(screen.getByTestId('theme-value')).toHaveTextContent('dark');
+      expect(document.documentElement.classList.contains('dark-theme')).toBe(true);
+      
+      await user.click(screen.getByRole('button', { name: 'Toggle' }));
+      
+      expect(screen.getByTestId('theme-value')).toHaveTextContent('light');
+      expect(document.documentElement.classList.contains('dark-theme')).toBe(false);
+    });
   });
 });
