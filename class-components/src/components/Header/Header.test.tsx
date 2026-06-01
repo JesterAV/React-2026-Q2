@@ -16,6 +16,7 @@ vi.mock('../../services/localStorage', () => ({
 
 describe('Header component', () => {
   const mockOnSearch = vi.fn();
+  const mockOnClearCache = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,7 +26,7 @@ describe('Header component', () => {
 
   describe('Correctly render', () => {
     test('Logo and image', () => {
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
 
       expect(screen.getByText('Hunterpedia')).toBeInTheDocument();
 
@@ -36,12 +37,13 @@ describe('Header component', () => {
     });
 
     test('Input and Button', () => {
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
 
       expect(screen.getByRole('textbox')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'About' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Test Error' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Clear cache' })).toBeInTheDocument();
     });
   });
 
@@ -51,7 +53,7 @@ describe('Header component', () => {
       const mockGet = vi.mocked(localStorageService.get);
       mockGet.mockReturnValue(savedSearch);
 
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
 
       expect(localStorageService.get).toHaveBeenCalledWith(searchKey);
       expect(screen.getByRole('textbox')).toHaveValue(savedSearch);
@@ -62,7 +64,7 @@ describe('Header component', () => {
     test('updates input on type', async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
 
       const input = screen.getByRole('textbox');
 
@@ -74,7 +76,7 @@ describe('Header component', () => {
     test('Submit form', async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
 
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'Search' });
@@ -91,7 +93,7 @@ describe('Header component', () => {
       mockGet.mockReturnValue('Castiel');
       
       const user = userEvent.setup();
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
       
       const button = screen.getByRole('button', { name: 'Search' });
       await user.click(button);
@@ -105,7 +107,7 @@ describe('Header component', () => {
       const mockGet = vi.mocked(localStorageService.get);
       mockGet.mockReturnValue('old');
       
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
       
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'Search' });
@@ -120,12 +122,23 @@ describe('Header component', () => {
     test('Navigate to about page', async () => {
       const user = userEvent.setup();
       
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
       
       const aboutButton = screen.getByRole('button', { name: 'About' });
       await user.click(aboutButton);
       
       expect(screen.getByRole('button', { name: 'About' })).toBeInTheDocument();
+    });
+
+    test('Calls onClearCache when clear cache button is clicked', async () => {
+      const user = userEvent.setup();
+      
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
+      
+      const clearCacheButton = screen.getByRole('button', { name: 'Clear cache' });
+      await user.click(clearCacheButton);
+      
+      expect(mockOnClearCache).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -135,7 +148,7 @@ describe('Header component', () => {
       
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       
-      renderWithProviders(<Header onSearch={mockOnSearch} />);
+      renderWithProviders(<Header onSearch={mockOnSearch} onClearCache={mockOnClearCache} />);
       
       const errorButton = screen.getByRole('button', { name: 'Test Error' });
       
