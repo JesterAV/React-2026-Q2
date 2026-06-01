@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react';
-import { supernaturalApi } from '../../services/supernaturalApi';
 import './DetailCard.scss';
 import Loader from '../Loader/Loader';
-import type { Character } from '../../types/characters';
+import { useGetCharacterByIdQuery } from '../../store/api/supernaturalApi';
+import { useEffect, useState } from 'react';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 function DetailCard({id, handleSetCard}: {id: string, handleSetCard: (data: string | null) => void}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [character, setCharacter] = useState<Character | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { data: character, isLoading, error: apiError } = useGetCharacterByIdQuery(id);
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
+    if (character) {
+      handleSetCard(id);
+    }
+  }, [id])
 
-      try {
-        const character = await supernaturalApi.getCharacterById(id);
-        setCharacter(character);
-        handleSetCard(id);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [id]);
+  useEffect(() => {
+    if (apiError) setError('Failed to load character data');
+  })
+
+  if (isLoading) return <Loader />
+  if (!character) return null;
 
   return (
     <div className='detail-card'>
@@ -33,13 +30,21 @@ function DetailCard({id, handleSetCard}: {id: string, handleSetCard: (data: stri
             <h1 className='detail-card__title'>{character?.name}</h1>
             <img src={character?.img} alt={character?.name} className='detail-card__image' />
             <p className='detail-card__text'>{`Actor: ${character?.actor.join(', ')}`}</p>
-            <p className='detail-card__text'>{`Episodes: ${character?.episodes.map(episode => episode.title)}`}</p>
+            <p className='detail-card__text'>{`Episodes: ${character?.episodes.map((episode: {title: string}) => episode.title)}`}</p>
             <p className='detail-card__text'>{`Occupation: ${character?.occupation}`}</p>
 
             <div className='detail-card__close-button' onClick={() => handleSetCard(null)}>
               <span className='detail-card__close-button_line-one'></span>
               <span className='detail-card__close-button_line-two'></span>
             </div>
+            {
+              error && (
+                <ErrorMessage
+                  message={error}
+                  onClose={() => setError(null)}
+                />
+              )
+            }
           </>
         )
       }
