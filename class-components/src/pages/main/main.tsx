@@ -1,53 +1,62 @@
 import './main.scss';
 import Header from "../../components/Header/Header";
 import ResultContainer from "../../components/ResultContainer/ResultContainer";
-import { supernaturalApi } from '../../services/supernaturalApi';
 import { localStorageService } from '../../services/localStorage';
 import { searchKey } from '../../config/localStorage';
 import Loader from '../../components/Loader/Loader';
 import { useEffect, useState } from 'react';
-import { apiConfig } from '../../config/api';
 import PaginationControllers from '../../components/PaginationControllers/PaginationControllers';
 import { useSearchParams } from 'react-router';
 import DetailCard from '../../components/DetailCard/DetailCard';
 import { useCharacterDetail } from '../../hooks/useCharacterDetail';
 import SelectedItems from '../../components/SelectedItems/SelectedItems';
 
+import { useGetAllCharactersQuery, useSearchCharactersQuery } from '../../store/api/supernaturalApi';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+
 function MainPage() {
-  const [characters, setCharacters] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
-  const [hasNext, setHasNext] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectId, setSelectId] = useState<string | null>(null);
   const { openDetails, closeDetails } = useCharacterDetail();
+  const [error, setError] = useState<string | null>(null);
   
   const currentPage = parseInt(searchParams.get('page') || '1');
   const currentQuery = searchParams.get('search') || '';
 
-  const loadCharacters = async (page: number, query: string) => {
-    setIsLoading(true);
+  const getAllQuery = useGetAllCharactersQuery(currentPage, {
+    skip: !!currentQuery
+  });
 
-    try {
-      const data = query 
-        ? await supernaturalApi.searchCharacter(query, page)
-        : await supernaturalApi.fetchAllCharacters(page);
+  const searchQuery = useSearchCharactersQuery(
+    {query: currentQuery, page: currentPage},
+    {skip: !currentQuery}
+  );
 
-      setCharacters(data.data);
+  const { data, isLoading, error: apiError, refetch } = currentQuery ? searchQuery : getAllQuery;
 
-      const totalItems = query ? data.resultCount : data.count;
-      const pages = Math.ceil(totalItems / apiConfig.defaultPageSize);
-      setTotalPages(pages > 0 ? pages : 1);
-      
-      if (query) localStorageService.set(searchKey, query);
-      
-      setHasNext(!!data.next);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (apiError) setError('Failed to load characters');
+  })
+
+  const characters = data?.data || [];
+  const totalItems = currentQuery ? data?.resultCount : data?.count;
+  const totalPages = Math.ceil((totalItems || 0) / 20);
+  const hasNext = !!data?.next;
+
+  useEffect(() => {
+    if (currentQuery) {
+      localStorageService.set(searchKey, currentQuery);
     }
-  };
+  }, [currentQuery]);
+
+  useEffect(() => {
+    const lastSearch = localStorageService.get(searchKey);
+    const hasUrlParams = searchParams.toString() !== '';
+    
+    if (!hasUrlParams && lastSearch) {
+      setSearchParams({ page: '1', search: lastSearch });
+    }
+  }, []);
 
   const handleSearch = (query: string): void => {
     const params: { page: string; search?: string } = { page: '1' };
@@ -76,30 +85,9 @@ function MainPage() {
     }
   }
 
-  useEffect(() => {
-    loadCharacters(currentPage, currentQuery);
-  }, [currentPage, currentQuery]);
-
-  useEffect(() => {
-    const lastSearch = localStorageService.get(searchKey);
-    const hasUrlParams = searchParams.toString() !== '';
-    
-    if (!hasUrlParams) {
-      const params: { page: string; search?: string } = { page: '1' };
-      if (lastSearch) {
-        params.search = lastSearch;
-      }
-      setSearchParams(params);
-    }
-  }, []);
-
-  useEffect(() => {
-
-  }, [selectId])
-
   return (
     <div className="main">
-      <Header onSearch={handleSearch} />
+      <Header onSearch={handleSearch} onClearCache={refetch} />
       <SelectedItems />
       {isLoading ? (
         <Loader />
@@ -123,6 +111,11 @@ function MainPage() {
           }
         </div>
       )}
+      {
+        error && (
+          <ErrorMessage message={error} onClose={() => setError(null)} />
+        )
+      }
     </div>
   );
 }
