@@ -12,7 +12,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="main-page" onClick={closeModal}>
+    <div className="main-page">
       {isOpen && (
         <div className="modal-overlay" onClick={handleOverlayClick}>
           <ModalForm closeHandler={closeModal} />
