@@ -2,6 +2,7 @@ import './Form.scss';
 
 import FormField from '../FormField/InputFormFiled';
 import SelectFormField from '../FormField/SelectFormFiled';
+import CheckboxFormFiled from '../FormField/CheckboxFormField';
 
 export default function Form() {
   return (
@@ -14,6 +15,7 @@ export default function Form() {
         placeholder="Select gender"
         options={['Male', 'Female']}
       />
+      <CheckboxFormFiled labelText="Accept terms of use" />
     </div>
   );
 }
