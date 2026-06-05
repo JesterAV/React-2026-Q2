@@ -1,0 +1,24 @@
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  &__label {
+    cursor: pointer;
+
+    font-size: 18px;
+  }
+
+  &__input {
+    width: 300px;
+    height: 30px;
+  }
+
+  &__select {
+    height: 30px;
+
+    cursor: pointer;
+  }
+}
+
