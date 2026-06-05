@@ -20,5 +20,17 @@
 
     cursor: pointer;
   }
+
+  &__checkbox {
+    color: #FFFFFF;
+
+    cursor: pointer;
+  }
+
+  &__checkbox-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
 }
 
