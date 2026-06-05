@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface useModalReturns {
   openModal: () => void;
@@ -14,8 +14,22 @@ export const useModal = (): useModalReturns => {
   };
 
   const closeModal = () => {
-    if (isOpen) setIsOpen(false);
+    setIsOpen(false);
   };
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeModal();
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [isOpen]);
 
   return {
     openModal,
