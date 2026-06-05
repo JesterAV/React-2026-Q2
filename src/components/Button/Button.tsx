@@ -5,7 +5,7 @@ type ButtonType = 'button' | 'submit';
 interface ButtonProps {
   text: string;
   type: ButtonType;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps) {
