@@ -8,10 +8,11 @@ interface FormFieldProps {
   type: ImportType;
   placeholder?: string;
   labelText?: string;
+  required?: boolean;
 }
 
 export default function InputFormFiled(props: FormFieldProps) {
-  const { type, placeholder, labelText } = props;
+  const { type, placeholder, labelText, required } = props;
   const fieldId = useId();
 
   if (type === 'checkbox') {
@@ -28,6 +29,7 @@ export default function InputFormFiled(props: FormFieldProps) {
         id={fieldId}
         type={type}
         placeholder={placeholder}
+        required={required}
       />
     </div>
   );
