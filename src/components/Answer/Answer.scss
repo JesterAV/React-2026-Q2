@@ -1,0 +1,15 @@
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  color: #FFFFFF;
+
+  border: 1px solid #FFFFFF;
+
+  padding: 5px;
+
+  &__image {
+    width: 200px;
+  }
+}
