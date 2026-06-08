@@ -4,10 +4,13 @@ interface useModalReturns {
   openModal: () => void;
   closeModal: () => void;
   isOpen: boolean;
+  openReactHookForm: boolean;
+  setOpenReactHookForm: (data: boolean) => void;
 }
 
 export const useModal = (): useModalReturns => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openReactHookForm, setOpenReactHookForm] = useState<boolean>(false);
 
   const openModal = () => {
     setIsOpen(true);
@@ -15,6 +18,7 @@ export const useModal = (): useModalReturns => {
 
   const closeModal = () => {
     setIsOpen(false);
+    if (openReactHookForm) setOpenReactHookForm(false);
   };
 
   useEffect(() => {
@@ -35,5 +39,7 @@ export const useModal = (): useModalReturns => {
     openModal,
     closeModal,
     isOpen,
+    openReactHookForm,
+    setOpenReactHookForm,
   };
 };
