@@ -56,7 +56,6 @@ export default function ReactHookForm() {
         rules={{ required: true }}
         render={({ field }) => (
           <NameFormField
-            labelText="name"
             placeholder="enter name"
             required={true}
             setIsValidForm={setIsValidForm}
@@ -70,7 +69,6 @@ export default function ReactHookForm() {
         rules={{ required: true }}
         render={({ field }) => (
           <AgeFormField
-            labelText="age"
             placeholder="enter your age"
             required={true}
             {...field}
@@ -84,7 +82,6 @@ export default function ReactHookForm() {
         rules={{ required: true }}
         render={({ field }) => (
           <EmailFormField
-            labelText="email"
             placeholder="enter email"
             required={true}
             {...field}

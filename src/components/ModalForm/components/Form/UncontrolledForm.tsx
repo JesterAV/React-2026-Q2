@@ -62,21 +62,18 @@ export default function UncontrolledForm() {
   return (
     <form className="form" onSubmit={handleSubmit} ref={formRef}>
       <NameFormField
-        labelText="name"
         placeholder="enter name"
         required={true}
         ref={nameRef}
         setIsValidForm={setIsValidForm}
       />
       <AgeFormField
-        labelText="age"
         placeholder="enter your age"
         required={true}
         ref={ageRef}
         setIsValidForm={setIsValidForm}
       />
       <EmailFormField
-        labelText="email"
         placeholder="enter email"
         required={true}
         ref={emailRef}
