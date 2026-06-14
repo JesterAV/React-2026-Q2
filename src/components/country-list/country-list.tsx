@@ -1,8 +1,10 @@
 import type { Country } from '../../types';
-import { CountryCard } from '../country-card/country-card';
 import { getPopulationForYear, createYearDataMap } from '../../utils/data-transformers';
+import { CountryRow } from './country-row';
 
 import styles from './country-list.module.css';
+import { useMemo } from 'react';
+import { List, useDynamicRowHeight } from 'react-window';
 
 type CountryListProps = {
   countries: Country[];
@@ -24,32 +26,43 @@ export const CountryList = ({
   sortField,
   sortOrder,
 }: CountryListProps) => {
-  const filteredCountries = countries
-    .filter((c) => {
+  const filteredCountries = useMemo(() => {
+    const filtered = countries
+      .filter((c) => {
       const matchesSearch = c.id.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRegion = !selectedRegion || c.data.some((d) => d.region === selectedRegion);
       return matchesSearch && matchesRegion;
     })
-    .sort((a, b) => {
-      if (sortField === 'name') {
-        return sortOrder === 'asc' ? a.id.localeCompare(b.id) : b.id.localeCompare(a.id);
-      } else {
-        const popA = getPopulationForYear(createYearDataMap(a.data), selectedYear) || 0;
-        const popB = getPopulationForYear(createYearDataMap(b.data), selectedYear) || 0;
-        return sortOrder === 'asc' ? popA - popB : popB - popA;
-      }
+
+    const populationCache = new Map(filtered.map(c => [c.id, getPopulationForYear(createYearDataMap(c.data), selectedYear) ?? 0]));
+
+    return filtered.sort((a, b) => {
+      if (sortField === 'name') return (sortOrder === 'asc' ? a.id.localeCompare(b.id) : b.id.localeCompare(a.id));
+      const populationA = populationCache.get(a.id)!;
+      const populationB = populationCache.get(b.id)!;
+      return sortOrder === 'asc' ? populationA - populationB : populationB - populationA;
     });
+  }, [countries, searchQuery, selectedYear, selectedRegion, sortField, sortOrder]);
+
+  const rowProps = useMemo(() => ({
+    countries: filteredCountries,
+    selectedColumns: selectedColumns,
+    selectedYear: selectedYear
+  }), [filteredCountries, selectedColumns, selectedYear]);
+
+  const rowHeight = useDynamicRowHeight({
+    defaultRowHeight: 200
+  })
 
   return (
-    <div className={styles.countryList}>
-      {filteredCountries.map((country, index) => (
-        <CountryCard
-          key={index}
-          country={country}
-          selectedYear={selectedYear}
-          selectedColumns={selectedColumns}
-        />
-      ))}
+    <div className={styles.countryList} style={{height: '600px'}}>
+      <List 
+        rowComponent={CountryRow}
+        rowProps={rowProps}
+        rowCount={filteredCountries.length}
+        overscanCount={1}
+        rowHeight={rowHeight}
+      />
     </div>
   );
 };
