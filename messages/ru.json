@@ -1,0 +1,33 @@
+{
+  "aboutPage": {
+    "aboutText": "Это приложение предлагает поисковую систему, в которой вы можете найти персонажей из сериала «Сверхъестественное».",
+    "aboutAuthor": "Автор:",
+    "buttonText": "Вернуться на главную"
+  },
+  "notFoundPage": {
+    "notFoundPageText": "Ууупс! Страница не найдена :(",
+    "notFoundPageTextButton": "Вернуться на галавную"
+  },
+  "header": {
+    "searchButton": "Поиск",
+    "testButton": "Тест ошибки",
+    "aboutButton": "О нас",
+    "clearCache": "Очистить кэш"
+  },
+  "errorBoundary": {
+    "errorBoundaryText": "Ууупс, что-то пошло не так",
+    "errorBoundaryButton": "Попробовать заново"
+  },
+  "paginationControllers": {
+    "prevButton": "Назад",
+    "nextButton": "Вперед"
+  },
+  "resultContainerError": {
+    "resultContainerErrorText": "Символы не найдены. Пожалуйста, попробуйте другой запрос."
+  },
+  "selectedItem": {
+    "selectedItemCounter": "Выбрано:",
+    "selectedItemDeselectButton": "Отменить выбор",
+    "Download": "Загрузить"
+  }
+}
