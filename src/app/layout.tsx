@@ -1,3 +1,5 @@
+import {NextIntlClientProvider} from 'next-intl';
+
 export default function RootLayout({
   children,
 }: {
@@ -11,7 +13,11 @@ export default function RootLayout({
         <title>class-components</title>
       </head>
       <body>
-        <div id="root">{children}</div>
+        <NextIntlClientProvider>
+          <div id="root">
+            {children}
+          </div>
+        </NextIntlClientProvider>
         <script type="module" src="/src/main.tsx"></script>
       </body>
     </html>
