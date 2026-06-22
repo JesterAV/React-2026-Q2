@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface SelectedITemProps {
   img: string,
   name: string
@@ -8,7 +10,7 @@ function SelectedItem(props: SelectedITemProps) {
 
   return (
     <div className="selected-item">
-      <img src={img} alt={name} className="selected-item__img" />
+      <Image width={50} height={30} src={img} alt={name} className="selected-item__img" />
       <p className="selected-item__text">{name}</p>
     </div>
   )
