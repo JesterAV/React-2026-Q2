@@ -1,13 +1,17 @@
-import './Header.scss';
-import logo from '../../assets/supernatural_logo.png';
+'use client';
 
+import './Header.scss';
+import logo from '../../../public/supernatural_logo.png';
+import Image from 'next/image';
 import Button from "../Button/Button";
 import { localStorageService } from '../../services/localStorage';
 import { searchKey } from '../../config/localStorage';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
 import { appRoutes } from '../../router/routes';
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
+import { useRouter } from '../../i18n/navigation';
+import LangSwitcher from '../LangSwitcher/LangSwitcher';
+import { useTranslations } from 'next-intl';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -15,42 +19,46 @@ interface HeaderProps {
 }
 
 function Header({ onSearch, onClearCache }: HeaderProps) {
-  const [searchValue, setSearchValue] = useState(localStorageService.get(searchKey));
+  const [searchValue, setSearchValue] = useState('');
   const [hasError, setHasError] = useState(false);
+  const router = useRouter();
+  const t = useTranslations('header');
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    setSearchValue(localStorageService.get(searchKey));
+  }, []);
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     const query = searchValue.trim();
     const lastQuery = localStorageService.get(searchKey);
     localStorageService.set(searchKey, query);
-    
     if (query !== lastQuery) onSearch(query);
-  }
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(event.target.value);
-  }
+  };
 
   if (hasError) throw new Error('Test Error');
-  
-  return(
+
+  return (
     <header className="header">
       <div className='header__logo-and-title'>
-        <img className='header__logo' src={logo} alt='supernatural logo' />
+        <Image src={logo} alt='supernatural logo' width={100} height={100} />
         <h2 className='header__title'>Hunterpedia</h2>
       </div>
       <form className='header__form' onSubmit={handleSubmit}>
         <input className="header__input" value={searchValue} onChange={handleChange} />
-        <Button text='Search' type='submit'/>
+        <Button text={t('searchButton')} type='submit' />
       </form>
-      <Button text='Test Error' type='button' onClick={() => setHasError(true)} />
-      <Button text='About' type='button' onClick={() => navigate(appRoutes.about)} />
-      <Button text='Clear cache' type='button' onClick={() => onClearCache()} />
+      <Button text={t('testButton')} type='button' onClick={() => setHasError(true)} />
+      <Button text={t('aboutButton')} type='button' onClick={() => router.push(appRoutes.about)} />
+      <Button text={t('clearCache')} type='button' onClick={() => onClearCache()} />
       <ThemeSwitcher />
+      <LangSwitcher />
     </header>
-  )
+  );
 }
 
 export default Header;
