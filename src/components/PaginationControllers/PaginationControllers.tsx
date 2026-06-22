@@ -1,5 +1,6 @@
 import './PaginationControllers.scss';
 import Button from "../Button/Button";
+import { useTranslations } from 'next-intl';
 
 interface PaginationControllersProps {
   currentPage: number;
@@ -10,12 +11,13 @@ interface PaginationControllersProps {
 
 function PaginationControllers(props: PaginationControllersProps) {
   const {currentPage, hasNext, onChangePage} = props;
+  const t = useTranslations('paginationControllers');
 
   return(
     <div className="pagination-controllers">
-      <Button text='Prev' type="button" onClick={() => onChangePage(currentPage - 1)} disabled={currentPage === 1} />
+      <Button text={t('prevButton')} type="button" onClick={() => onChangePage(currentPage - 1)} disabled={currentPage === 1} />
       <span className="pagination-controllers__current-page">{currentPage}</span>
-      <Button text='Next' type="button" onClick={() => onChangePage(currentPage + 1)} disabled={!hasNext} />
+      <Button text={t('nextButton')} type="button" onClick={() => onChangePage(currentPage + 1)} disabled={!hasNext} />
     </div>
   )
 }
