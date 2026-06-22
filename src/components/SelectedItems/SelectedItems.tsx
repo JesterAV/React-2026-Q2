@@ -1,39 +1,39 @@
+'use client';
+
 import './SelectedItems.scss';
 
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../types/state";
-import { useEffect, useState } from "react";
-import { supernaturalApi } from "../../services/supernaturalApi";
-import type { Character } from "../../types/characters";
-import SelectedItem from "./SelectedItem";
 import Button from '../Button/Button';
 import { clearSelected } from '../../store/slices/selectCards';
 import downloadCSV from '../../utils/downloadCSV';
+import SelectedCharacter from './SelectedCharacter';
+import { clearSelectedCharacters } from '../../store/slices/characters';
+import { useTranslations } from 'next-intl';
 
 function SelectedItems() {
   const selectedItemsIds = useSelector((state: RootState) => state.selectedCards.selectCards);
-  const [selectedItems, setSelectedItems] = useState<Character[]>([]);
+  const selectedCharacters = useSelector((state: RootState) => state.selectedCharacters.selectedCharacters);
+  const t = useTranslations('selectedItem');
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    (async () => {
-      const item = await Promise.all(selectedItemsIds.map(itemId => supernaturalApi.getCharacterById(itemId)))
-      setSelectedItems(item);
-    })();
-  }, [selectedItemsIds]);
+  const handleDeselect = () => {
+    dispatch(clearSelected());
+    dispatch(clearSelectedCharacters());
+  }
 
-  if (selectedItems.length === 0) return null;
+  if (selectedItemsIds.length === 0) return null;
   
   return (
     <div className="selected-items">
       <div className='selected-items__header'>
-        <p className='selected-items__counter'>Selected: {selectedItems.length}</p>
-        <Button text='Deselect all' type='button' onClick={() => dispatch(clearSelected())} />
-        <Button text='Download' type='button' onClick={() => downloadCSV(selectedItems)} />
+        <p className='selected-items__counter'>{t('selectedItemCounter')} {selectedItemsIds.length}</p>
+        <Button text={t('selectedItemDeselectButton')} type='button' onClick={handleDeselect} />
+        <Button text={t('Download')} type='button' onClick={() => downloadCSV(selectedCharacters)} />
       </div>
       <div className='selected-items__main'>
-        {selectedItems.map(item => <SelectedItem img={item.img} name={item.name} key={item.id} />)}
+        {selectedItemsIds.map(id => (<SelectedCharacter key={id} id={id} />))}
       </div>
     </div>
   )
