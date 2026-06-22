@@ -1,9 +1,11 @@
+'use client';
+
 import './ErrorBoundary.scss';
 
 import { Component, type ErrorInfo } from "react";
 import Button from "../Button/Button";
 
-class ErrorBoundary extends Component<{children: React.ReactNode}> {
+class ErrorBoundary extends Component<{children: React.ReactNode, title: string, buttonText: string}> {
   state = {
     hasError: false
   }
@@ -24,8 +26,8 @@ class ErrorBoundary extends Component<{children: React.ReactNode}> {
     if (this.state.hasError) {
       return (
         <div className="error">
-          <h1 className="error__title">Oops, something went wrong</h1>
-          <Button text="Try again" type='button' onClick={() => this.handleTryAgain()}/>
+          <h1 className="error__title">{this.props.title}</h1>
+          <Button text={this.props.buttonText} type='button' onClick={() => this.handleTryAgain()}/>
         </div>
       )
     }
