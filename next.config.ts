@@ -2,8 +2,15 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 
 export const nextConfig: NextConfig = {
-  output: 'export',
   distDir: './dist',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'supernatural-api.onrender.com'
+      }
+    ]
+  }
 }
  
 const withNextIntl = createNextIntlPlugin();
