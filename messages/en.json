@@ -29,5 +29,8 @@
     "selectedItemCounter": "Selected:",
     "selectedItemDeselectButton": "Deselect all",
     "Download": "Download"
+  },
+  "characterCard": {
+    "actor": "Actor:"
   }
 }

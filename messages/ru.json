@@ -29,5 +29,8 @@
     "selectedItemCounter": "Выбрано:",
     "selectedItemDeselectButton": "Отменить выбор",
     "Download": "Загрузить"
+  },
+  "characterCard": {
+    "actor": "Актёр:"
   }
 }
