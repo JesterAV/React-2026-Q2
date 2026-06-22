@@ -2,7 +2,6 @@ import type { ReactElement, ReactNode } from 'react';
 import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { configureStore } from '@reduxjs/toolkit';
 import selectedCardsReducer from '../store/slices/selectCards';
 import { ThemeProvider } from '../context/ThemeContext';
@@ -33,9 +32,7 @@ export function renderWithProviders(
     return (
       <Provider store={store}>
         <ThemeProvider>
-          <MemoryRouter initialEntries={initialEntries}>
-            {children}
-          </MemoryRouter>
+          {children}
         </ThemeProvider>
       </Provider>
     );

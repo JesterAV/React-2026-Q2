@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import MainPage from './MainPageContent';
 import { renderWithProviders } from '../../tests/test-utils';
 import { useGetAllCharactersQuery, useSearchCharactersQuery } from '../../store/api/supernaturalApi';
+import type { Mock } from 'vitest';
 
 vi.mock('../../store/api/supernaturalApi', () => ({
   useGetAllCharactersQuery: vi.fn(),
@@ -26,10 +27,15 @@ vi.mock('../../components/Header/Header', () => ({
   ),
 }));
 
+interface Character {
+  id: string;
+  name: string;
+}
+
 vi.mock('../../components/ResultContainer/ResultContainer', () => ({
-  default: ({ setId, characters }: { setId: (id: string) => void; characters: any[] }) => (
+  default: ({ setId, characters }: { setId: (id: string) => void; characters: Character[] }) => (
     <div data-testid="result-container">
-      {characters.map((char: any) => (
+      {characters.map((char: Character) => (
         <button 
           key={char.id} 
           onClick={() => setId(char.id)} 
@@ -104,20 +110,20 @@ describe('MainPage component', () => {
       { id: '2', name: 'Sam Winchester' }
     ],
     count: 2,
-    next: null
+    next: null as string | null
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
     
-    (useGetAllCharactersQuery as any).mockReturnValue({
+    (useGetAllCharactersQuery as Mock).mockReturnValue({
       data: mockCharacters,
       isLoading: false,
       error: null,
       refetch: vi.fn(),
     });
     
-    (useSearchCharactersQuery as any).mockReturnValue({
+    (useSearchCharactersQuery as Mock).mockReturnValue({
       data: null,
       isLoading: false,
       error: null,
@@ -127,7 +133,7 @@ describe('MainPage component', () => {
 
   describe('Correctly render', () => {
     test('Shows loader when loading', () => {
-      (useGetAllCharactersQuery as any).mockReturnValue({
+      (useGetAllCharactersQuery as Mock).mockReturnValue({
         data: null,
         isLoading: true,
         error: null,
@@ -161,7 +167,7 @@ describe('MainPage component', () => {
   describe('Pagination', () => {
     test('Changes page when clicking next', async () => {
       const user = userEvent.setup();
-      (useGetAllCharactersQuery as any).mockReturnValue({
+      (useGetAllCharactersQuery as Mock).mockReturnValue({
         data: { ...mockCharacters, next: 'next-page-url' },
         isLoading: false,
         error: null,
@@ -230,7 +236,7 @@ describe('MainPage component', () => {
 
   describe('Error handling', () => {
     test('Handles API error gracefully', async () => {
-      (useGetAllCharactersQuery as any).mockReturnValue({
+      (useGetAllCharactersQuery as Mock).mockReturnValue({
         data: null,
         isLoading: false,
         error: new Error('API Error'),
@@ -246,7 +252,7 @@ describe('MainPage component', () => {
   describe('Clear cache', () => {
     test('Calls refetch when clear cache button is clicked', async () => {
       const mockRefetch = vi.fn();
-      (useGetAllCharactersQuery as any).mockReturnValue({
+      (useGetAllCharactersQuery as Mock).mockReturnValue({
         data: mockCharacters,
         isLoading: false,
         error: null,

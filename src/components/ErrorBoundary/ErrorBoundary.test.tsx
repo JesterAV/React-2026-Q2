@@ -14,7 +14,7 @@ const BuggyComponent = () => {
 describe('ErrorBoundary component', () => {
   test('render children', () => {
     render(
-      <ErrorBoundary>
+      <ErrorBoundary title="Oops, something went wrong" buttonText="Try again">
         <StubComponent />
       </ErrorBoundary>
     );
@@ -23,7 +23,7 @@ describe('ErrorBoundary component', () => {
 
   test('render error', () => {
     render(
-      <ErrorBoundary>
+      <ErrorBoundary title="Oops, something went wrong" buttonText="Try again">
         <BuggyComponent />
       </ErrorBoundary>
     );
@@ -41,7 +41,7 @@ describe('ErrorBoundary component', () => {
     };
 
     const { rerender } = render(
-      <ErrorBoundary>
+      <ErrorBoundary title="Oops, something went wrong" buttonText="Try again">
         <ConditionalComponent />
       </ErrorBoundary>
     );
@@ -54,7 +54,7 @@ describe('ErrorBoundary component', () => {
     await user.click(button);
 
     rerender(
-      <ErrorBoundary>
+      <ErrorBoundary title="Oops, something went wrong" buttonText="Try again">
         <ConditionalComponent />
       </ErrorBoundary>
     );
