@@ -1,0 +1,36 @@
+{
+  "aboutPage": {
+    "aboutText": "This application offers a search engine in which you can find characters from the Supernatural series.",
+    "aboutAuthor": "Author:",
+    "buttonText": "Go to main page"
+  },
+  "notFoundPage": {
+    "notFoundPageText": "Ooops! Page not found :(",
+    "notFoundPageTextButton": "Go to home"
+  },
+  "header": {
+    "searchButton": "Search",
+    "testButton": "Test Error",
+    "aboutButton": "About",
+    "clearCache": "Clear cache"
+  },
+  "errorBoundary": {
+    "errorBoundaryText": "Oops, something went wrong",
+    "errorBoundaryButton": "Try again"
+  },
+  "paginationControllers": {
+    "prevButton": "Prev",
+    "nextButton": "Next"
+  },
+  "resultContainerError": {
+    "resultContainerErrorText": "No characters found, please try another request."
+  },
+  "selectedItem": {
+    "selectedItemCounter": "Selected:",
+    "selectedItemDeselectButton": "Deselect all",
+    "Download": "Download"
+  },
+  "characterCard": {
+    "actor": "Actor:"
+  }
+}
